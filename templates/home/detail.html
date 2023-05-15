@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static%}
+{% block title%}
+LoLShop.com - Mua Acc Giá Rẻ, Uy Tín!
+{% endblock title %}
+{% block user%}
+{% if login == True %}
+	<ul class="top_nav_menu">
+		<li class="account">
+			<a href="#">
+				<i class="fa-solid fa-user"></i> {{ username }} <i class="fa fa-angle-down"></i>
+			</a>
+			<ul class="account_selection">
+				<li><a href="{% url 'load-cart' %}"><i class="fa-solid fa-money-bill-1"></i> Số Dư: {{ money }} vnđ</a></li>
+				<li><a href="{% url 'change-info' %}"><i class="fa-solid fa-key"></i> Thông Tin Tài Khoản</a></li>
+				<li><a href="{% url 'user-logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng Xuất</a></li>
+			</ul>
+		</li>
+	</ul>
+{% else %}
+	<ul class="top_nav_menu">
+		<li class="account">
+			<a href="#">
+				Tài Khoản Cá Nhân
+				<i class="fa fa-angle-down"></i>
+			</a>
+			<ul class="account_selection">
+				<li><a href="{% url 'user-login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i>Đăng Nhập</a></li>
+				<li><a href="{% url 'user-login' %}"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng Ký</a></li>
+			</ul>
+		</li>
+	</ul>
+{% endif %}
+{% endblock user%}
+{% block addshop %}
+{% if user %}
+    <ul class="navbar_user">
+        {% if user.is_superuser %}
+            <li><a href="#"><i class="fa-solid fa-plus"></i></a></li>
+        {% endif %}
+        <li class="checkout">
+            <a href="{% url 'user-cart' %}">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                <span id="checkout_items" class="checkout_items">{{ cart }}</span>
+            </a>
+        </li>
+    </ul>
+{% endif %}
+{% endblock addshop%}
+{% block slide %}
+
+	<div class="container single_product_container">
+		<div class="row">
+			<div class="col">
+
+				<!-- Breadcrumbs -->
+
+				<div class="breadcrumbs d-flex flex-row align-items-center">
+					<ul>
+						<li><a href="{% url 'index' %}">Trang Chủ</a></li>
+						<li><a href="{% url 'category' slug=cate.slug %}"><i class="fa fa-angle-right" aria-hidden="true"></i>{{ cate.name }}</a></li>
+						<li class="active"><a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i>{{ acc.name }}</a></li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="row" style="margin-top: -50px; margin-bottom: -60px;">
+			<div class="col-lg-12">
+                <div class="product_details" style="padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #efefef;">
+					<div class="product_details_title">
+						<h2 id="accname" style="color: #fe4c50; text-decoration: underline;">{{ acc.name }}</h2>
+						<p>{{ acc.description }}</p>
+					</div>
+					<div class="original_price" style="margin-bottom: 10px;">{{ sale }} vnđ</div>
+					<div class="product_price">Giá: {{ price }} vnđ</div>
+					<ul class="star_rating">
+						<li><i class="fa fa-star" aria-hidden="true"></i></li>
+						<li><i class="fa fa-star" aria-hidden="true"></i></li>
+						<li><i class="fa fa-star" aria-hidden="true"></i></li>
+						<li><i class="fa fa-star" aria-hidden="true"></i></li>
+						<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+					</ul>
+					<div class="product_color">
+						<span>Loại Tài Khoản: {{ cate.name }}</span>
+					</div>
+					<div class="quantity d-flex flex-column flex-sm-row align-items-sm-center">
+                        <span style="padding-left: 11px; padding-top: 8px; height: 42px; width: 100px; border: 1px solid #e5e5e5;">Số Lượng: 1</span>
+						<div class="red_button add_to_cart_button"><a href="{% url 'pay' slug=acc.slug %}">Mua Ngay</a></div>
+						{% csrf_token %}
+						{% if login == True %}
+							<div id="addCart" class="red_button add_to_cart_button" style="background-color: aqua; color: black;"><a href="#" style="color: #353535">Thêm Vào Giỏ Hàng</a></div>
+						{% endif %}
+					</div>
+				</div>
+				<div class="single_product_pics">
+					<div class="row">
+						<div class="col-lg-2 thumbnails_col order-lg-1 order-2" style="margin-top: 9px;">
+							<div class="single_product_thumbnails">
+								<ul>
+									<li><img src="{%static acc.image.url %}" alt="" data-image="{%static acc.image.url %}"></li>
+                                    {% if acc.image1 %}
+                                        <li class="active"><img src="{%static acc.image1.url %}" alt="" data-image="{%static acc.image1.url %}"></li>
+                                    {% endif %}
+									{% if acc.image2 %}
+                                        <li><img src="{%static acc.image2.url %}" alt="" data-image="{%static acc.image2.url %}"></li>
+                                    {% endif %}
+									{% if acc.image3 %}
+                                        <li><img src="{%static acc.image2.url %}" alt="" data-image="{%static acc.image3.url %}"></li>
+                                    {% endif %}
+								</ul>
+							</div>
+						</div>
+						<div class="col-lg-10 image_col order-lg-2 order-1">
+							<div class="single_product_image">
+								<div class="single_product_image_background" style="background-image:url({%static acc.image.url %})"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+        
+	</div>
+{% endblock slide %}
+
+{% block login-sigup%}
+{% endblock login-sigup%}
+
+{% block price %}
+{% endblock price %}
+
+
+{% block newproduct%}
+{% endblock newproduct%}
+
+
+

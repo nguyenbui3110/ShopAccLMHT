@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static%}
+{% block title%}
+LoLShop.com - Mua Acc Giá Rẻ, Uy Tín!
+{% endblock title %}
+{%block css%}
+<link rel="stylesheet" type="text/css" href="{% static 'plugins/jquery-ui-1.12.1.custom/jquery-ui.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/categories_styles.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/categories_responsive.css' %}">
+{% endblock css%}
+{% block user%}
+{% if login == True %}
+	<ul class="top_nav_menu">
+		<li class="account">
+			<a href="#">
+				<i class="fa-solid fa-user"></i> {{ username }} <i class="fa fa-angle-down"></i>
+			</a>
+			<ul class="account_selection">
+				<li><a href="#"><i class="fa-solid fa-money-bill-1"></i> Số Dư: {{ money }} vnđ</a></li>
+				<li><a href="#"><i class="fa-solid fa-key"></i> Thông Tin Tài Khoản</a></li>
+				<li><a href="#"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng Xuất</a></li>
+			</ul>
+		</li>
+	</ul>
+{% else %}
+	<ul class="top_nav_menu">
+		<li class="account">
+			<a href="#">
+				Tài Khoản Cá Nhân
+				<i class="fa fa-angle-down"></i>
+			</a>
+			<ul class="account_selection">
+				<li><a href="#"><i class="fa fa-sign-in" aria-hidden="true"></i>Đăng Nhập</a></li>
+				<li><a href="#"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng Ký</a></li>
+			</ul>
+		</li>
+	</ul>
+{% endif %}
+{% endblock user%}
+{% block addshop%}
+{% if user %}
+    <ul class="navbar_user">
+        {% if user.is_superuser %}
+            <li><a href="#"><i class="fa-solid fa-plus"></i></a></li>
+        {% endif %}
+        <li class="checkout">
+            <a href="{% url 'user-cart' %}">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                <span id="checkout_items" class="checkout_items">{{ cart }}</span>
+            </a>
+        </li>
+    </ul>
+{% endif %}
+{%endblock addshop%}
+{% block content %}
+	<div class="container product_section_container">
+		<div class="row">
+			<div class="col product_section clearfix">
+
+				<!-- Breadcrumbs -->
+
+				<div class="breadcrumbs d-flex flex-row align-items-center">
+					<ul style="width: 100%;">
+						<li><a href="{% url 'home' %}">Trang Chủ</a></li>
+						<li class="active"><a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i>{{ cate.name }}</a></li>
+					</ul>
+				</div>
+
+				<!-- Sidebar -->
+
+				<div class="sidebar">
+					<div class="sidebar_section">
+						<div class="sidebar_title">
+							<h5>Tất Cả Chuyên Mục</h5>
+						</div>
+						<ul class="sidebar_categories">
+							{% for item in allCate %}
+								{% if item.slug == cate.slug %}
+									<li class="active"><a href="{% url 'category' slug=item.slug %}"><span><i class="fa fa-angle-double-right" aria-hidden="true"></i></span><span class="sortCate">{{ item.name }}</span></a></li>
+								{% else %}
+									<li ><a href="{% url 'category' slug=item.slug %}">{{ item.name }}</a></li>
+								{% endif %}	
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+
+				<!-- Main Content -->
+
+				<div class="main_content">
+
+					<!-- Products -->
+
+					<div class="products_iso">
+						<div class="row">
+							<div class="col">
+								<div class="product-grid" style="position: relative; height: auto;">
+									{% for item in acc%}
+										{% if item.product == True %}
+											<div class="product-item men">
+												<div class="product discount product_filter">
+													<div class="product_image">
+														<img src="{%static item.image.url %}" alt="">
+													</div>
+													<div class="favorite favorite_left"></div>
+													<div class="product_info">
+														<h6 class="product_name" style="color: #666666;font-size: 15px;font-weight: normal;">{{ item.description }}</h6>
+													</div>
+													<div class="product_info">
+														<h6 class="product_name"><a href="{% url 'detail' slug=item.slug %}">{{ item.name }}</a></h6>
+														<div class="product_price">{{item.price}} vnd<span>{{ item.sale }} vnd</span></div>
+													</div>
+												</div>
+												<div class="red_button add_to_cart_button"><a href="{% url 'detail' slug=item.slug %}">Mua Ngay</a></div>
+											</div>
+										{% endif %}
+									{% endfor%}     
+
+								<!-- Product Sorting -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock content %}
+{%block script%}
+<script src="{% static 'plugins/jquery-ui-1.12.1.custom/jquery-ui.js' %}"></script>
+<script src="{% static 'js/categories_custom.js' %}"></script>
+<script src="{% static 'js/ajax.js' %}"></script>
+{%endblock script%}
